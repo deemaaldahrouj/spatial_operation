@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سيناريو حقيقي: نظام توجيه الرؤية الحاسوبية للسيارات الذاتية</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+        /* Dashboard scanning effect */
+        .scanline {
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(34, 197, 94, 0.1) 50%,
+                rgba(255,255,255,0)
+            );
+            background-size: 100% 20px;
+            animation: scan 4s linear infinite;
+        }
+        @keyframes scan {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 100%; }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-emerald-600 selection:text-white">
+
+    <!-- Main Header with Live AI Status -->
+    <header class="bg-slate-900 border-b border-slate-800 py-4 px-6 shadow-2xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4">
+                <div class="relative p-3 bg-emerald-600 rounded-xl text-white shadow-lg shadow-emerald-500/30 animate-pulse">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-2xl font-bold tracking-wide text-white">الرؤية الحاسوبية لسيارات الغد | نظام كاشف خطوط السير</h1>
+                    <p class="text-xs text-emerald-400 font-medium">محاكاة تفاعلية حية تظهر معالجة قنوات الكاميرا لسيارة ذاتية القيادة تواجه عوائق طبيعية</p>
+                </div>
+            </div>
+            <!-- AI Dashboard status indicators -->
+            <div class="flex items-center gap-3 bg-slate-950 px-4 py-2 rounded-xl border border-slate-800">
+                <span class="flex h-3 w-3 relative">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                </span>
+                <span class="text-xs font-mono text-emerald-400" id="aiStatus">نظام القيادة: نشط ومستقر</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left Column: Explanations of why we use each filter (5 Cols) -->
+        <section class="lg:col-span-5 flex flex-col gap-6">
+            
+            <!-- Real World Scenario Explanation card -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl"></div>
+                <h2 class="text-lg font-bold text-emerald-400 mb-3 flex items-center gap-2">
+                    <span>🚗 السيناريو الحقيقي: القيادة تحت المطر والتشويش</span>
+                </h2>
+                <p class="text-xs md:text-sm text-slate-300 leading-relaxed mb-4">
+                    أنت تقود سيارة ذكية في ليلة ممطرة وعاصفة. كاميرات الاستشعار الأمامية تتعرض لقطرات المطر والغبار (التي تظهر كضوضاء ملح وفلفل بيضاء وسوداء فجائية)، والخطوط الفاصلة للطريق تبهت في الظلام. 
+                    <strong>المهمة:</strong> استخلاص خطوط السير بدقة بالغة لتوجيه عجلة القيادة آلياً.
+                </p>
+                <div class="border-t border-slate-800 pt-3 space-y-2">
+                    <span class="text-xs font-semibold text-indigo-400 block">خط معالجة البيانات الحوسبي (Pipeline Stages):</span>
+                    <div class="grid grid-cols-3 gap-2 text-center text-[10px]">
+                        <div class="bg-slate-950 border border-slate-800 p-2 rounded-lg">
+                            <span class="block text-slate-400">1. التقاط الكاميرا</span>
+                            <span class="text-slate-500">صورة مشوشة وممطرة</span>
+                        </div>
+                        <div class="bg-slate-950 border border-emerald-900 p-2 rounded-lg text-emerald-300">
+                            <span class="block font-semibold">2. إزالة الضوضاء</span>
+                            <span id="activeDenoiseBadge">مرشح الوسيط (Median)</span>
+                        </div>
+                        <div class="bg-slate-950 border border-indigo-900 p-2 rounded-lg text-indigo-300">
+                            <span class="block font-semibold">3. استخلاص الحافة</span>
+                            <span class="text-indigo-400">مؤثر سوبل (Sobel)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deep-dive: Why did we use these filters? -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+                <h3 class="text-md font-bold text-white flex items-center gap-2">
+                    <span>🔬 لماذا نستخدم هذه الفلاتر بالذات؟</span>
+                </h3>
+
+                <!-- Filter Explanation Row 1 -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800/80 hover:border-slate-700 transition">
+                    <div class="flex justify-between items-start mb-1">
+                        <span class="text-xs font-bold text-emerald-400 bg-emerald-950/50 px-2 py-0.5 rounded">الخطوة 2: تصفية الضوضاء (Denoising)</span>
+                        <span class="text-[10px] text-slate-500 font-mono font-bold">Median Filter</span>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        <strong class="text-white">لماذا استخدمناه؟</strong> قطرات المطر الساقطة والغبار تصنع بكسلات بيضاء ناصعة فجائية (Salt noise). لو استخدمنا <strong class="text-rose-400">مرشح المعدل (Mean)</strong>، فإنه سيقوم بخلط هذه البكسلات الساطعة مع جوارها مما يجعل الصورة بأكملها ضبابية ويبهت خط السير. بينما <strong class="text-emerald-400">مرشح الوسيط (Median)</strong> يرتّب جيران البكسل ويختار القيمة الوسطى، مما يمحو قطرة المطر تماماً وكأنها لم تكن مع الحفاظ على الحافة الحادة لخط السير!
+                    </p>
+                </div>
+
+                <!-- Filter Explanation Row 2 -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800/80 hover:border-slate-700 transition">
+                    <div class="flex justify-between items-start mb-1">
+                        <span class="text-xs font-bold text-indigo-400 bg-indigo-950/50 px-2 py-0.5 rounded">الخطوة 3: كشف الحواف (Edge Detection)</span>
+                        <span class="text-[10px] text-slate-500 font-mono font-bold">Sobel Operator</span>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        <strong class="text-white">لماذا استخدمناه؟</strong> خط سير السيارة هو منطقة انتقال حاد ومفاجئ في الإضاءة واللون (من رمادي الإسفلت الداكن إلى أبيض/أصفر الخطوط). مؤثر سوبل يقيس هذا التغير (المشتقة الرياضية الأولى) عمودياً وأفقياً، مما يسمح للسيارة بتحديد نهاية حافة الطريق وبداية منطقة الأمان للقيادة ورسم مسارات القيادة الخضراء.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Dashboard Controls -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <h3 class="text-md font-bold text-white mb-4">🎛️ لوحة تحكم الرادار والبيئة</h3>
+                
+                <div class="space-y-4">
+                    <!-- Preset Selector -->
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-2">اختر الحالة البيئية الحالية:</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="setWeather('rain')" id="btn-rain" class="px-3 py-2 bg-emerald-600 border border-emerald-500 text-white rounded-lg text-xs font-bold transition-all shadow-md shadow-emerald-500/20">ليلة ممطرة بغزارة</button>
+                            <button onclick="setWeather('dust')" id="btn-dust" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold transition-all">عاصفة ترابية</button>
+                            <button onclick="setWeather('night')" id="btn-night" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold transition-all mt-2 sm:mt-0">ظلام حالك</button>
+                            <button onclick="setWeather('clear')" id="btn-clear" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold transition-all mt-2 sm:mt-0">جو مستقر صافٍ</button>
+                        </div>
+                    </div>
+
+                    <!-- Denoise Filter Toggle -->
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-2">نوع الفلتر النشط لإلغاء التشويش (خطوة 2):</label>
+                        <div class="flex gap-2 p-1 bg-slate-950 rounded-lg border border-slate-800">
+                            <button onclick="setFilterType('median')" id="filterToggleMedian" class="flex-1 py-1.5 rounded bg-emerald-600 text-white text-xs font-bold transition-all">الوسيط (Median) - مقترح</button>
+                            <button onclick="setFilterType('mean')" id="filterToggleMean" class="flex-1 py-1.5 rounded text-slate-400 hover:text-white text-xs font-bold transition-all">المعدل (Mean Blur)</button>
+                        </div>
+                    </div>
+
+                    <!-- Controls Sliders -->
+                    <div class="space-y-3 pt-2 border-t border-slate-800">
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-400 mb-1">
+                                <span>شدة التشويش والضوضاء:</span>
+                                <span id="noiseLabel" class="font-mono text-emerald-400 font-bold">40%</span>
+                            </div>
+                            <input id="noiseSlider" type="range" min="0" max="100" value="40" oninput="adjustNoise(this.value)" class="w-full accent-emerald-500 cursor-pointer h-1.5 bg-slate-950 rounded-lg">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-400 mb-1">
+                                <span>حد عزل الحواف (Sobel Threshold):</span>
+                                <span id="thresholdLabel" class="font-mono text-indigo-400 font-bold">55</span>
+                            </div>
+                            <input id="thresholdSlider" type="range" min="10" max="150" value="55" oninput="adjustThreshold(this.value)" class="w-full accent-indigo-500 cursor-pointer h-1.5 bg-slate-950 rounded-lg">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Right Column: Visual Monitors Dashboard (7 Cols) -->
+        <section class="lg:col-span-7 flex flex-col gap-6">
+            
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col">
+                <div class="mb-4">
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <span>📡 لوحة شاشات الرصد الفوري لقنوات الاستشعار</span>
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-1">توضح الشاشات الأربع التالية رحلة معالجة الإشارة الصورية المأخوذة من كاميرا السيارة من أجل توجيه المقود.</p>
+                </div>
+
+                <!-- 2x2 Screen Monitors Grid Layout -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-950 p-4 rounded-2xl border border-slate-800 shadow-inner relative overflow-hidden">
+                    
+                    <!-- Scanline Overlay for Sci-Fi AI effect -->
+                    <div class="absolute inset-0 scanline pointer-events-none opacity-40"></div>
+
+                    <!-- Monitor 1: RAW Input with Noise -->
+                    <div class="flex flex-col items-center bg-slate-900/40 p-2.5 rounded-xl border border-slate-800 hover:border-slate-700 transition">
+                        <div class="flex justify-between w-full mb-2 px-1">
+                            <span class="text-xs text-slate-400 font-bold">1. لقطة الكاميرا الحية (RAW)</span>
+                            <span class="text-[9px] px-1.5 py-0.5 bg-rose-950 border border-rose-800 text-rose-300 rounded font-mono font-bold">مشوشة</span>
+                        </div>
+                        <canvas id="monSrc" width="220" height="150" class="border border-slate-800 bg-black rounded-lg shadow-md w-full"></canvas>
+                        <div class="text-[10px] text-slate-500 mt-1.5 text-center leading-tight">تلتقط الأمطار والغبار والخطوط الباهتة.</div>
+                    </div>
+
+                    <!-- Monitor 2: Denoised Image Output -->
+                    <div class="flex flex-col items-center bg-slate-900/40 p-2.5 rounded-xl border border-slate-800 hover:border-slate-700 transition">
+                        <div class="flex justify-between w-full mb-2 px-1">
+                            <span class="text-xs text-slate-400 font-bold">2. بعد مرشح تصفية التشويش</span>
+                            <span id="monFilterBadge" class="text-[9px] px-1.5 py-0.5 bg-emerald-950 border border-emerald-800 text-emerald-300 rounded font-mono font-bold">الوسيط نشط</span>
+                        </div>
+                        <canvas id="monDenoise" width="220" height="150" class="border border-slate-800 bg-black rounded-lg shadow-md w-full"></canvas>
+                        <div class="text-[10px] text-slate-500 mt-1.5 text-center leading-tight" id="denoiseExplanations">الوسيط يمحو قطرات الماء تماماً ويحافظ على الحواف.</div>
+                    </div>
+
+                    <!-- Monitor 3: Sobel Edge Output -->
+                    <div class="flex flex-col items-center bg-slate-900/40 p-2.5 rounded-xl border border-slate-800 hover:border-slate-700 transition">
+                        <div class="flex justify-between w-full mb-2 px-1">
+                            <span class="text-xs text-slate-400 font-bold">3. تدرج الحواف (مؤثر سوبل)</span>
+                            <span class="text-[9px] px-1.5 py-0.5 bg-indigo-950 border border-indigo-800 text-indigo-300 rounded font-mono font-bold">Sobel |G|</span>
+                        </div>
+                        <canvas id="monSobel" width="220" height="150" class="border border-slate-800 bg-black rounded-lg shadow-md w-full"></canvas>
+                        <div class="text-[10px] text-slate-500 mt-1.5 text-center leading-tight">تفاضل الضوء المكاني للكشف عن حدود الطريق.</div>
+                    </div>
+
+                    <!-- Monitor 4: Final Overlay lane overlay -->
+                    <div class="flex flex-col items-center bg-slate-900/40 p-2.5 rounded-xl border border-slate-800 hover:border-slate-700 transition">
+                        <div class="flex justify-between w-full mb-2 px-1">
+                            <span class="text-xs text-emerald-400 font-bold">4. خريطة قرار القيادة الذاتية</span>
+                            <span class="text-[9px] px-1.5 py-0.5 bg-emerald-950 border border-emerald-800 text-emerald-300 rounded font-mono font-bold">AI Decision</span>
+                        </div>
+                        <canvas id="monFinal" width="220" height="150" class="border border-slate-800 bg-black rounded-lg shadow-md w-full"></canvas>
+                        <div class="text-[10px] text-slate-500 mt-1.5 text-center leading-tight">تظليل مسارات خطوط السير وتحديد التوجيه آلياً.</div>
+                    </div>
+
+                </div>
+
+                <!-- Live Steering Diagnostics Console -->
+                <div class="mt-6 bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono text-xs">
+                    <h4 class="text-emerald-400 font-bold mb-3 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1r-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
+                        </svg>
+                        لوحة تشخيص وتوجيه نظام الرؤية الحاسوبية (Diagnostics Terminal):
+                    </h4>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-300 text-[11px] leading-relaxed">
+                        <div class="space-y-1.5 border-l border-slate-800/80 pl-2">
+                            <div><span class="text-slate-500">حالة الكاميرا:</span> <span class="text-white font-bold">1080p @ 60FPS</span></div>
+                            <div><span class="text-slate-500">تصفية التشويش:</span> <span id="diagDenoise" class="text-emerald-400 font-bold">تم تمكين مرشح الوسيط (مستقر)</span></div>
+                            <div><span class="text-slate-500">معدل تباين الحافة:</span> <span id="diagEdge" class="text-white font-bold">نشط ومقروء</span></div>
+                        </div>
+                        <div class="space-y-1.5">
+                            <div class="flex items-center justify-between"><span class="text-slate-500">دقة التوجيه والمقود:</span> <span id="diagSteer" class="text-emerald-400 font-bold">آمن (انحراف 0%)</span></div>
+                            <!-- Small dynamic SVG gauge depicting wheel angle -->
+                            <div class="flex items-center justify-center pt-2">
+                                <span class="text-[10px] text-slate-500 mr-2">زاوية التوجيه:</span>
+                                <svg id="wheelSvg" class="w-8 h-8 transition-transform duration-300" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="40" stroke="#334155" stroke-width="8" fill="none"/>
+                                    <line x1="50" y1="10" x2="50" y2="90" stroke="#10b981" stroke-width="8" />
+                                    <line x1="10" y1="50" x2="90" y2="50" stroke="#10b981" stroke-width="8" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-500">
+        <p>هذا المعمل يجسد كود الالتفاف (Convolution) من الصفر بلغة جافا سكريبت تفصيلية لشرح معالجة الإشارات في الرؤية الذاتية.</p>
+    </footer>
+
+    <!-- Processing Logic -->
+    <script>
+        // Set canvas variables
+        let monSrc, monDenoise, monSobel, monFinal;
+        let ctxSrc, ctxDenoise, ctxSobel, ctxFinal;
+        
+        // Simulation settings
+        let noiseLevel = 40; // Percentage of Salt & Pepper noise
+        let sobelThreshold = 55; // Threshold for Sobel edge binarization
+        let activeFilter = 'median'; // 'median' or 'mean'
+        let currentPreset = 'rain'; // 'rain', 'dust', 'night', 'clear'
+        
+        let roadOffset = 0; // Animation offset to simulate driving
+
+        // Sobel kernels
+        const SobelX = [
+            [-1, 0, 1],
+            [-2, 0, 2],
+            [-1, 0, 1]
+        ];
+
+        const SobelY = [
+            [-1, -2, -1],
+            [ 0,  0,  0],
+            [ 1,  2,  1]
+        ];
+
+        window.onload = function() {
+            // Setup canvases
+            monSrc = document.getElementById('monSrc');
+            monDenoise = document.getElementById('monDenoise');
+            monSobel = document.getElementById('monSobel');
+            monFinal = document.getElementById('monFinal');
+
+            ctxSrc = monSrc.getContext('2d');
+            ctxDenoise = monDenoise.getContext('2d');
+            ctxSobel = monSobel.getContext('2d');
+            ctxFinal = monFinal.getContext('2d');
+
+            // Apply starting preset style
+            setWeather('rain');
+
+            // Start simulation loop
+            animateDrive();
+        };
+
+        function setWeather(preset) {
+            currentPreset = preset;
+            
+            // Remove active classes from all buttons
+            ['rain', 'dust', 'night', 'clear'].forEach(p => {
+                const btn = document.getElementById('btn-' + p);
+                btn.className = "px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold transition-all";
+            });
+
+            // Set active class
+            const activeBtn = document.getElementById('btn-' + preset);
+            activeBtn.className = "px-3 py-2 bg-emerald-600 border border-emerald-500 text-white rounded-lg text-xs font-bold transition-all shadow-md shadow-emerald-500/20";
+
+            // Update parameters based on preset
+            if (preset === 'rain') {
+                noiseLevel = 45;
+                sobelThreshold = 55;
+                activeFilter = 'median';
+            } else if (preset === 'dust') {
+                noiseLevel = 70; // Heavy Gaussian-like sandstorm noise
+                sobelThreshold = 65;
+                activeFilter = 'mean'; // Mean filter helps dissolve dust clouds better
+            } else if (preset === 'night') {
+                noiseLevel = 25;
+                sobelThreshold = 35; // Lower threshold needed due to dark image
+                activeFilter = 'median';
+            } else if (preset === 'clear') {
+                noiseLevel = 5;
+                sobelThreshold = 55;
+                activeFilter = 'median';
+            }
+
+            // Sync sliders
+            document.getElementById('noiseSlider').value = noiseLevel;
+            document.getElementById('noiseLabel').innerText = noiseLevel + '%';
+            document.getElementById('thresholdSlider').value = sobelThreshold;
+            document.getElementById('thresholdLabel').innerText = sobelThreshold;
+
+            syncFilterUI();
+        }
+
+        function setFilterType(type) {
+            activeFilter = type;
+            syncFilterUI();
+        }
+
+        function syncFilterUI() {
+            const btnMedian = document.getElementById('filterToggleMedian');
+            const btnMean = document.getElementById('filterToggleMean');
+            const explanation = document.getElementById('denoiseExplanations');
+            const activeBadge = document.getElementById('activeDenoiseBadge');
+            const monBadge = document.getElementById('monFilterBadge');
+            const diagDenoise = document.getElementById('diagDenoise');
+
+            if (activeFilter === 'median') {
+                btnMedian.className = "flex-1 py-1.5 rounded bg-emerald-600 text-white text-xs font-bold transition-all";
+                btnMean.className = "flex-1 py-1.5 rounded text-slate-400 hover:text-white text-xs font-bold transition-all";
+                explanation.innerText = "الوسيط يمحو قطرات الماء والضوضاء المعزولة تماماً ويحافظ على ثبات حواف الطريق.";
+                activeBadge.innerText = "مرشح الوسيط (Median)";
+                activeBadge.className = "block font-semibold text-emerald-400";
+                monBadge.innerText = "الوسيط نشط";
+                monBadge.className = "text-[9px] px-1.5 py-0.5 bg-emerald-950 border border-emerald-800 text-emerald-300 rounded font-mono font-bold";
+                diagDenoise.innerText = "مرشح الوسيط نشط (يوصى به للأمطار)";
+                diagDenoise.className = "text-emerald-400 font-bold";
+            } else {
+                btnMedian.className = "flex-1 py-1.5 rounded text-slate-400 hover:text-white text-xs font-bold transition-all";
+                btnMean.className = "flex-1 py-1.5 rounded bg-yellow-600 text-white text-xs font-bold transition-all";
+                explanation.innerText = "المرشح الخطي يسحق الضباب والغبار، ولكنه يسبب ضبابية في حدود السير المكتشفة.";
+                activeBadge.innerText = "مرشح المعدل (Mean)";
+                activeBadge.className = "block font-semibold text-yellow-400";
+                monBadge.innerText = "المعدل نشط";
+                monBadge.className = "text-[9px] px-1.5 py-0.5 bg-yellow-950 border border-yellow-800 text-yellow-300 rounded font-mono font-bold";
+                diagDenoise.innerText = "مرشح المعدل نشط (انحلال خفيف للحواف)";
+                diagDenoise.className = "text-yellow-400 font-bold";
+            }
+        }
+
+        function adjustNoise(val) {
+            noiseLevel = parseInt(val, 10);
+            document.getElementById('noiseLabel').innerText = noiseLevel + '%';
+        }
+
+        function adjustThreshold(val) {
+            sobelThreshold = parseInt(val, 10);
+            document.getElementById('thresholdLabel').innerText = sobelThreshold;
+        }
+
+        // Draw the virtual perspective road onto the cameras
+        function drawVirtualRoad(ctx, width, height) {
+            // Draw dark asphalt
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(0, 0, width, height);
+
+            // Draw sky/horizon area
+            ctx.fillStyle = currentPreset === 'night' ? '#020617' : '#0f172a';
+            ctx.fillRect(0, 0, width, height / 2);
+
+            // Draw fading sunset/fog glow
+            let gradient = ctx.createLinearGradient(0, height/2 - 30, 0, height/2);
+            if (currentPreset === 'rain') {
+                gradient.addColorStop(0, '#0f172a');
+                gradient.addColorStop(1, '#334155');
+            } else if (currentPreset === 'dust') {
+                gradient.addColorStop(0, '#451a03'); // Orange dusty glow
+                gradient.addColorStop(1, '#78350f');
+            } else {
+                gradient.addColorStop(0, '#020617');
+                gradient.addColorStop(1, '#1e1b4b');
+            }
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, height/2 - 30, width, 30);
+
+            // Draw road boundary edges (perspective)
+            ctx.beginPath();
+            ctx.moveTo(width / 2, height / 2);
+            ctx.lineTo(0, height);
+            ctx.lineTo(width, height);
+            ctx.closePath();
+            ctx.fillStyle = '#0f172a';
+            ctx.fill();
+
+            // Lane markers calculations (animated)
+            let step = (roadOffset % 40);
+
+            // Left lane marking (Yellow)
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(width / 2, height / 2);
+            ctx.lineTo(20, height);
+            ctx.stroke();
+
+            // Right lane marking (White Dashed perspective)
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 4;
+            ctx.setLineDash([12, 18]);
+            ctx.lineDashOffset = -step;
+            ctx.beginPath();
+            ctx.moveTo(width / 2, height / 2);
+            ctx.lineTo(width - 20, height);
+            ctx.stroke();
+            ctx.setLineDash([]); // Reset line dash
+
+            // Draw a dashboard static frame silhouette
+            ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(2, 2, width-4, height-4);
+        }
+
+        // Apply custom Salt & Pepper and Gaussian Noise based on UI parameters
+        function injectNoise(data, width, height) {
+            const len = data.length;
+
+            if (currentPreset === 'dust') {
+                // Dust sandstorm noise: Add orange/brown tint and fine random offsets
+                for (let i = 0; i < len; i += 4) {
+                    // Inject sand tint
+                    data[i] = Math.min(255, data[i] + 40); // red
+                    data[i+1] = Math.min(255, data[i+1] + 20); // green
+                    
+                    // Fine Gaussian random fuzz
+                    const fuzz = (Math.random() - 0.5) * noiseLevel;
+                    data[i] = Math.max(0, Math.min(255, data[i] + fuzz));
+                    data[i+1] = Math.max(0, Math.min(255, data[i+1] + fuzz));
+                    data[i+2] = Math.max(0, Math.min(255, data[i+2] + fuzz));
+                }
+            }
+
+            // Salt and pepper noise (drops of rain or dust particles)
+            const noiseIntensity = noiseLevel / 100;
+            const totalPixels = width * height;
+            const noiseCount = Math.floor(totalPixels * noiseIntensity);
+
+            for (let i = 0; i < noiseCount; i++) {
+                const rx = Math.floor(Math.random() * width);
+                const ry = Math.floor(Math.random() * height);
+                const index = (ry * width + rx) * 4;
+
+                // Randomly choose salt (white 255) or pepper (black 0)
+                const color = Math.random() > 0.5 ? 255 : 0;
+                data[index] = color;
+                data[index+1] = color;
+                data[index+2] = color;
+            }
+        }
+
+        // Run chosen denoising filter (Median or Mean)
+        function runDenoise(srcData, dstData, w, h) {
+            const src = srcData.data;
+            const dst = dstData.data;
+
+            for (let y = 0; y < h; y++) {
+                for (let x = 0; x < w; x++) {
+                    const outIdx = (y * w + x) * 4;
+
+                    if (activeFilter === 'median') {
+                        // Median Filter over 3x3 window
+                        let rArr = [], gArr = [], bArr = [];
+
+                        for (let ky = -1; ky <= 1; ky++) {
+                            for (let kx = -1; kx <= 1; kx++) {
+                                let px = x + kx;
+                                let py = y + ky;
+
+                                // Boundary replicate clamp
+                                px = Math.max(0, Math.min(w - 1, px));
+                                py = Math.max(0, Math.min(h - 1, py));
+
+                                const idx = (py * w + px) * 4;
+                                rArr.push(src[idx]);
+                                gArr.push(src[idx+1]);
+                                bArr.push(src[idx+2]);
+                            }
+                        }
+
+                        // Sort array elements ascending
+                        rArr.sort((a,b) => a - b);
+                        gArr.sort((a,b) => a - b);
+                        bArr.sort((a,b) => a - b);
+
+                        // Extract middle (median) value
+                        dst[outIdx] = rArr[4];
+                        dst[outIdx+1] = gArr[4];
+                        dst[outIdx+2] = bArr[4];
+                        dst[outIdx+3] = 255;
+                    } else {
+                        // Mean Filter (Box Blurring) over 3x3 window
+                        let rSum = 0, gSum = 0, bSum = 0;
+
+                        for (let ky = -1; ky <= 1; ky++) {
+                            for (let kx = -1; kx <= 1; kx++) {
+                                let px = x + kx;
+                                let py = y + ky;
+
+                                px = Math.max(0, Math.min(w - 1, px));
+                                py = Math.max(0, Math.min(h - 1, py));
+
+                                const idx = (py * w + px) * 4;
+                                rSum += src[idx];
+                                gSum += src[idx+1];
+                                bSum += src[idx+2];
+                            }
+                        }
+
+                        dst[outIdx] = Math.round(rSum / 9);
+                        dst[outIdx+1] = Math.round(gSum / 9);
+                        dst[outIdx+2] = Math.round(bSum / 9);
+                        dst[outIdx+3] = 255;
+                    }
+                }
+            }
+        }
+
+        // Run Sobel Edge convolution and magnitude calculations
+        function runSobel(denoiseData, sobelData, w, h) {
+            const src = denoiseData.data;
+            const dst = sobelData.data;
+
+            for (let y = 0; y < h; y++) {
+                for (let x = 0; x < w; x++) {
+                    let gx = 0;
+                    let gy = 0;
+
+                    for (let ky = -1; ky <= 1; ky++) {
+                        for (let kx = -1; kx <= 1; kx++) {
+                            let px = x + kx;
+                            let py = y + ky;
+
+                            px = Math.max(0, Math.min(w - 1, px));
+                            py = Math.max(0, Math.min(h - 1, py));
+
+                            const idx = (py * w + px) * 4;
+                            const grayscale = (src[idx] + src[idx+1] + src[idx+2]) / 3;
+
+                            gx += grayscale * SobelX[ky+1][kx+1];
+                            gy += grayscale * SobelY[ky+1][kx+1];
+                        }
+                    }
+
+                    // Compute gradient magnitude
+                    const mag = Math.sqrt(gx*gx + gy*gy);
+                    const outIdx = (y * w + x) * 4;
+
+                    dst[outIdx] = Math.min(255, mag);
+                    dst[outIdx+1] = Math.min(255, mag);
+                    dst[outIdx+2] = Math.min(255, mag);
+                    dst[outIdx+3] = 255;
+                }
+            }
+        }
+
+        // Create final AI guided steering lane overlay based on thresholded Sobel data
+        function runAIOverlay(denoiseData, sobelData, finalData, w, h) {
+            const dData = denoiseData.data;
+            const sData = sobelData.data;
+            const fData = finalData.data;
+
+            // Copy base denoised image to final first
+            for (let i = 0; i < dData.length; i++) {
+                fData[i] = dData[i];
+            }
+
+            let leftXSum = 0, leftCount = 0;
+            let rightXSum = 0, rightCount = 0;
+
+            // Analyze only the lower half of the image (road surface)
+            for (let y = Math.floor(h / 2); y < h; y++) {
+                for (let x = 0; x < w; x++) {
+                    const idx = (y * w + x) * 4;
+                    const magnitude = sData[idx];
+
+                    // If edge magnitude is stronger than threshold, treat as lane pixel
+                    if (magnitude > sobelThreshold) {
+                        // Is left lane or right lane?
+                        if (x < w / 2) {
+                            leftXSum += x;
+                            leftCount++;
+                            // Highlight detected left lane edge in Yellow/Red on HUD screen
+                            fData[idx] = 239;     // R
+                            fData[idx+1] = 68;   // G
+                            fData[idx+2] = 68;   // B
+                        } else {
+                            rightXSum += x;
+                            rightCount++;
+                            // Highlight right lane edge in vibrant Cyan on HUD screen
+                            fData[idx] = 6;       // R
+                            fData[idx+1] = 182;   // G
+                            fData[idx+2] = 212;   // B
+                        }
+                    }
+                }
+            }
+
+            // Calculate steering direction of vehicle based on lane centers asymmetry
+            const leftAvgX = leftCount > 0 ? (leftXSum / leftCount) : 20;
+            const rightAvgX = rightCount > 0 ? (rightXSum / rightCount) : w - 20;
+
+            const laneCenter = (leftAvgX + rightAvgX) / 2;
+            const imageCenter = w / 2;
+            const dev = laneCenter - imageCenter; // Positive = right offset, Negative = left offset
+
+            // Determine safety status label
+            const aiStatus = document.getElementById('aiStatus');
+            const diagSteer = document.getElementById('diagSteer');
+            const wheelSvg = document.getElementById('wheelSvg');
+            
+            // Limit calculated deviation to display steering wheel rotation
+            const steeringAngle = Math.max(-45, Math.min(45, dev * 2.5));
+            wheelSvg.style.transform = `rotate(${steeringAngle}deg)`;
+
+            if (leftCount < 5 && rightCount < 5) {
+                aiStatus.innerText = "نظام القيادة: خطأ رصد الحواف!";
+                aiStatus.className = "text-xs font-mono text-red-500 animate-pulse";
+                diagSteer.innerText = "فشل في رصد خطوط الطريق! (خطر)";
+                diagSteer.className = "text-red-500 font-bold";
+            } else {
+                const devPercentage = Math.round((Math.abs(dev) / imageCenter) * 100);
+                if (devPercentage > 15) {
+                    aiStatus.innerText = "نظام القيادة: انحراف حرج للسيارة!";
+                    aiStatus.className = "text-xs font-mono text-yellow-500";
+                    diagSteer.innerText = `تعديل المسار نشط (انحراف ${devPercentage}%)`;
+                    diagSteer.className = "text-yellow-400 font-bold";
+                } else {
+                    aiStatus.innerText = "نظام القيادة: مسار مستقر";
+                    aiStatus.className = "text-xs font-mono text-emerald-400";
+                    diagSteer.innerText = `مستقر بالكامل (انحراف ${devPercentage}%)`;
+                    diagSteer.className = "text-emerald-400 font-bold";
+                }
+            }
+        }
+
+        // Main animation render and update frame loop
+        function animateDrive() {
+            roadOffset += 1.5; // Simulate forward velocity
+
+            const w = 220;
+            const h = 150;
+
+            // Step 1: Draw clean base scene and capture image buffer
+            drawVirtualRoad(ctxSrc, w, h);
+            const rawImg = ctxSrc.getImageData(0, 0, w, h);
+
+            // Inject Rain or dust noise on screen buffer
+            injectNoise(rawImg.data, w, h);
+            ctxSrc.putImageData(rawImg, 0, 0);
+
+            // Create image data slots for other outputs
+            const denoiseImg = ctxDenoise.createImageData(w, h);
+            const sobelImg = ctxSobel.createImageData(w, h);
+            const finalImg = ctxFinal.createImageData(w, h);
+
+            // Step 2: Denoise Convolution pipeline (Median/Mean)
+            runDenoise(rawImg, denoiseImg, w, h);
+            ctxDenoise.putImageData(denoiseImg, 0, 0);
+
+            // Step 3: Edge Detection Sobel Convolution pipeline
+            runSobel(denoiseImg, sobelImg, w, h);
+            ctxSobel.putImageData(sobelImg, 0, 0);
+
+            // Step 4: Final Overlay Steering decision HUD map
+            runAIOverlay(denoiseImg, sobelImg, finalImg, w, h);
+            ctxFinal.putImageData(finalImg, 0, 0);
+
+            // Run next frame
+            requestAnimationFrame(animateDrive);
+        }
+    </script>
+</body>
+</html>
